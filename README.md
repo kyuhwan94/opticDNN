@@ -1,6 +1,7 @@
 # atomDL
 Reconstructing atomic absorption signals using deep learning
 
+## Structure
 1. ./20241231_full: Contains example data that can be used to test the training protocol
 2. ./configs: Contains an example configuration that can used for training.
 3. ./src: Contains source code for training
