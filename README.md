@@ -8,7 +8,7 @@ Reconstructing atomic absorption signals using deep learning
 
 ## Pipeline
 5. ./src/run.sh: Shell script used to execute train.py
-6. ./src/train.py: Python code that constructs the pipeline of the DNN.
+6. ./src/train.py: Pipeline of the DNN (PyTorch)
    * Train via back propagation
    * Visualization of inferred reference image
 8. ./src/predict.py: Python code that can be used test the trained DNN on example image. $\rightarrow$ Results will be save in ./results_predict/.
