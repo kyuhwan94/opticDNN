@@ -8,7 +8,7 @@ Reconstructing atomic absorption signals using deep learning
 4. ./src/run.sh: Shell script used to execute train.py
 5. ./src/train.py: Python code that constructs the pipeline of the DNN + train via back propagation
 6. ./src/predict.py: Python code that can be used test the trained DNN on example image by reconstructing OD image based on inferred reference image.
--> Results will be save in ./results_predict/.
+$\rightarrow$ Results will be save in ./results_predict/.
 
 ## Example usage
 Terminal (in our case the OS was Ubuntu) -> Type: "./run.sh" and enter (Note. you have to give permission to run the shell script)
