@@ -14,6 +14,6 @@ Reconstructing atomic absorption signals using deep learning
 8. ./src/predict.py: Python code that can be used test the trained DNN on example image. $\rightarrow$ Results will be save in ./results_predict/.
 
 ## Example usage
-Terminal (in our case the OS was Ubuntu) $\rightarrow$ Type: "./run.sh" and enter (Note. you have to give permission to run the shell script)
+Terminal (in our case the OS was Linux) $\rightarrow$ Type: "./run.sh" and enter (Note. you have to give permission to run the shell script)
 $\rightarrow$ This will run train.py with configuration files contained in ./configs.
 $\rightarrow$ The results such as the visualization of inferred reference image and model weights will be saved in ./results/.
