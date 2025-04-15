@@ -1,6 +1,5 @@
 # atomDNN
-Using deep neural networks to reconstruct atomic absorption signals.
-We have tested that t
+This registry contains the deep neural network architecture and training protocol which can be used to reconstruct atomic absorption signals.
 
 ## Items
 1. ./20241231_full: Contains example data that can be used to test the training protocol
