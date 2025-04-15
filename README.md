@@ -4,11 +4,14 @@ This registry contains a python script for training a deep neural network, which
 This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
 
 ## Items
-1. configs: Contains an example configuration that can be used for training.
+
+1. src: Contains source code for training
+
+2. configs: Contains an example configuration that can be used for training.
  
    * The example configuration is set in pretraining mode. 
 
-2. src: Contains source code for training
+
 
 ## Pipeline
 5. ./src/run.sh: Shell script used to execute train.py
