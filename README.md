@@ -1,6 +1,8 @@
 # atomDNN
 This registry contains the deep neural network architecture and training protocol which can be used to reconstruct atomic absorption signals.
 
+We provide the python script used for training the network.
+
 ## Items
 1. ./20241231_full: Contains example data that can be used to test the training protocol
 2. ./configs: Contains an example configuration that can used for training.
