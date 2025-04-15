@@ -20,11 +20,11 @@ This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/
 
 #### Contents of configuration
 
-   * ENABLE_PRETRAIN
-   * ENABLE_REPLAY
-   * ENABLE_TRANSFER
-   * VAL_RATIO
-   * REPLAY_RATIO
+   * ENABLE_PRETRAIN: Toggle switch to enable pretrain (Set to true to enable pretrain. Set to false if you plan to load pretrained weights)
+   * ENABLE_REPLAY: Toggle switch to enable replay while transfer learning
+   * ENABLE_TRANSFER: Toggle switch to enable transfer learning
+   * VAL_RATIO: The portion of how much you are going to reserve for validation (values between 0 and 1)
+   * REPLAY_RATIO: The portion of how much you are going to use for replay (values between 0 and 1)
    * SAVE_PATH
    * SAVE_WEIGHTS
    * LOAD_WEIGHTS
