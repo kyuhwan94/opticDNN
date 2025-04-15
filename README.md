@@ -1,5 +1,6 @@
 # atomDNN
-Reconstructing atomic absorption signals using deep learning
+Using deep neural networks to reconstruct atomic absorption signals.
+We have tested that t
 
 ## Items
 1. ./20241231_full: Contains example data that can be used to test the training protocol
