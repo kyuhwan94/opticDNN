@@ -3,7 +3,7 @@ This registry contains the deep neural network architecture and training protoco
 
 We provide the python script used for training the network.
 
-This repository is [Quantum Gas Laboratory] (https://qgl.snu.ac.kr/).
+This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
 
 ## Items
 1. ./configs: Contains an example configuration that can used for training.
