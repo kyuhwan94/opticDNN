@@ -7,8 +7,10 @@ This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/
 
 ## Items
 1. ./configs: Contains an example configuration that can used for training.
-> * The example configuration is set in pretraining mode. 
-3. ./src: Contains source code for training
+ 
+   * The example configuration is set in pretraining mode. 
+
+2. ./src: Contains source code for training
 
 ## Pipeline
 5. ./src/run.sh: Shell script used to execute train.py
