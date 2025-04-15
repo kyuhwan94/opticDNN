@@ -4,9 +4,8 @@ This registry contains the deep neural network architecture and training protoco
 We provide the python script used for training the network.
 
 ## Items
-1. ./20241231_full: Contains example data that can be used to test the training protocol
-2. ./configs: Contains an example configuration that can used for training.
-3. ./src: Contains source code for training
+1. ./configs: Contains an example configuration that can used for training.
+2. ./src: Contains source code for training
 
 ## Pipeline
 5. ./src/run.sh: Shell script used to execute train.py
