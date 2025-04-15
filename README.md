@@ -1,4 +1,4 @@
-# atomDL
+# atomDNN
 Reconstructing atomic absorption signals using deep learning
 
 ## Items
