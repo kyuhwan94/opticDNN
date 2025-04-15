@@ -16,7 +16,11 @@ This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/
 
 ### _configs_: Contains an example configuration that can be used for training.
  
-   * The example configuration is set in pretraining mode. 
+   * The example configuration is set in pretraining mode.
+
+#### Contents of configuration
+
+   * 
 
 ## Pipeline
 
