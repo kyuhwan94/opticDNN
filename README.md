@@ -5,15 +5,21 @@ This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/
 
 ## Items
 
-1. **src**: Contains source code for training
+### _src_: Contains source code for training
 
-2. **configs**: Contains an example configuration that can be used for training.
+#### train.py
+
+* Contains both the pipeline of the DNN and training protocol.
+* Also, a visualization of the inferred reference image shows whether we are on the right track.
+
+----
+
+### _configs_: Contains an example configuration that can be used for training.
  
    * The example configuration is set in pretraining mode. 
 
-
-
 ## Pipeline
+
 5. ./src/run.sh: Shell script used to execute train.py
 6. ./src/train.py: Pipeline of the DNN (PyTorch)
    * Train via back propagation (ADAMW)
