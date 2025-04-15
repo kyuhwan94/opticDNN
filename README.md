@@ -20,7 +20,29 @@ This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/
 
 #### Contents of configuration
 
-   * 
+   * ENABLE_PRETRAIN
+   * ENABLE_REPLAY
+   * ENABLE_TRANSFER
+   * VAL_RATIO
+   * REPLAY_RATIO
+   * SAVE_PATH
+   * SAVE_WEIGHTS
+   * LOAD_WEIGHTS
+   * PATIENCE
+   * IMPROVEMENT_THRESHOLD
+   * FEATURES
+   * NUM_GROUPS
+   * BATCH_SIZE
+   * BATCH_MOMENTUM
+   * PRETRAIN_LR
+   * TRANSFER_LR
+   * WEIGHT_DECAY
+   * CENTER_X
+   * CENTER_Y
+   * RADIUS
+   * PRETRAIN_FOLDER_PATHS
+   * EVAL_FOLDER_PATHS
+   * TRANSFER_FOLDER_PATHS
 
 ## Pipeline
 
