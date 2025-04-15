@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.optim.lr_scheduler import MultiStepLR
 from torch.utils.data import Dataset, DataLoader, Subset, ConcatDataset, random_split
 import numpy as np
 import os
@@ -20,43 +19,6 @@ import csv
 # done
 
 ######################################
-
-######################################
-# Configuration
-######################################
-
-def load_config(config_path):
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-    return config
-
-def save_configuration_txt(config, config_file="configuration.txt"):
-    """
-    Save config dict as .txt 
-    Args:
-        config (dict): Dictionary containing configuration parameters.
-        config_file (str): Name of the file to save the configuration.
-    """
-    # Get the script name if available
-    script_name = os.path.basename(__file__) if "__file__" in globals() else "UNKNOWN_SCRIPT"
-
-    # Ensure the save path exists (it is assumed that config contains a 'SAVE_PATH' key)
-    os.makedirs(config["SAVE_PATH"], exist_ok=True)
-    config_filename = os.path.join(config["SAVE_PATH"], config_file)
-
-    # You can either dump the dict as formatted text or use json.dumps.
-    with open(config_filename, "w") as f:
-        f.write(f"Script name: {script_name}\n\n")
-        f.write("=== Configuration ===\n\n")
-        for key, value in config.items():
-            # Optionally, pretty-print lists or nested dictionaries:
-            if isinstance(value, (list, dict)):
-                value_str = json.dumps(value, indent=4)
-            else:
-                value_str = str(value)
-            f.write(f"{key} = {value_str}\n")
-    
-    print(f"Configuration saved to {config_filename}")
 
 ######################################
 # U-Net Architecture
@@ -150,47 +112,54 @@ class UNet(nn.Module):
 
     def forward(self, x):
         # ------------------ Encoder Forward Pass ------------------
-        d1 = self.down1(x)  # shape: (Batch, features, 1024, 1024)
-        d1_pool = self.pool1(d1) # shape: (Batch, features, 512, 512)
+        d1 = self.down1(x)  # shape: (Batch, features, H, W)
+        d1_pool = self.pool1(d1) # shape: (Batch, features, H/2, W/2)
 
-        d2 = self.down2(d1_pool)  # shape: (Batch, features*2, 512, 512)
-        d2_pool = self.pool2(d2) # shape: (Batch, features*2, 256, 256)
+        d2 = self.down2(d1_pool)  # shape: (Batch, features*2, H/2, W/2)
+        d2_pool = self.pool2(d2) # shape: (Batch, features*2, H/4, W/4)
 
-        d3 = self.down3(d2_pool)  # shape: (Batch, features*4, 256, 256)
-        d3_pool = self.pool3(d3) # shape: (Batch, features*4, 128, 128)
+        d3 = self.down3(d2_pool)  # shape: (Batch, features*4, H/4, W/4)
+        d3_pool = self.pool3(d3) # shape: (Batch, features*4, H/8, W/8)
 
-        d4 = self.down4(d3_pool)  # shape: (Batch, features*8, 128, 128)
-        d4_pool = self.pool4(d4) # shape: (Batch, features*8, 64, 64)
+        d4 = self.down4(d3_pool)  # shape: (Batch, features*8, H/8, W/8)
+        d4_pool = self.pool4(d4) # shape: (Batch, features*8, H/16, W/16)
 
-        d5 = self.down5(d4_pool)  # shape: (Batch, features*16, 64, 64)
-        d5_pool = self.pool5(d5) # shape: (Batch, features*16, 32, 32)
+        d5 = self.down5(d4_pool)  # shape: (Batch, features*16, H/16, W/16)
+        d5_pool = self.pool5(d5) # shape: (Batch, features*16, H/32, W/32)
 
-        d6 = self.down6(d5_pool)  # shape: (Batch, features*32, 32, 32)
-        d6_pool = self.pool6(d6) # shape: (Batch, features*32, 16, 16)
+        d6 = self.down6(d5_pool)  # shape: (Batch, features*32, H/32, W/32)
+        d6_pool = self.pool6(d6) # shape: (Batch, features*32, H/64, W/64)
 
-        d7 = self.down7(d6_pool)  # shape: (Batch, features*64, 16, 16)
-        d7_pool = self.pool7(d7) # shape: (Batch, features*64, 8, 8)
+        d7 = self.down7(d6_pool)  # shape: (Batch, features*64, H/64, W/64)
+        d7_pool = self.pool7(d7) # shape: (Batch, features*64, H/128, W/128)
 
         # ------------------ Bottleneck ------------------
-        bottleneck = self.bottleneck(d7_pool) # shape: (Batch, features*128, 8, 8)        
+        bottleneck = self.bottleneck(d7_pool) # shape: (Batch, features*128, H/128, W/128)        
 
         # ------------------ Decoder Forward Pass ------------------
-        u7 = self.up7(bottleneck, d7) # shape: (Batch, features*64, 16, 16)
-        u6 = self.up6(u7, d6)   # shape: (Batch, features*32, 32, 32)
-        u5 = self.up5(u6, d5)   # shape: (Batch, features*16, 64, 64)
-        u4 = self.up4(u5, d4)   # shape: (Batch, features*8, 128, 128)
-        u3 = self.up3(u4, d3)   # shape: (Batch, features*4, 256, 256)
-        u2 = self.up2(u3, d2)   # shape: (Batch, features*2, 512, 512)
-        u1 = self.up1(u2, d1)   # shape: (Batch, features, 1024, 1024)
+        u7 = self.up7(bottleneck, d7) # shape: (Batch, features*64, H/64, W/64)
+        u6 = self.up6(u7, d6)   # shape: (Batch, features*32, H/32, W/32)
+        u5 = self.up5(u6, d5)   # shape: (Batch, features*16, H/16, W/16)
+        u4 = self.up4(u5, d4)   # shape: (Batch, features*8, H/8, W/8)
+        u3 = self.up3(u4, d3)   # shape: (Batch, features*4, H/4, W/4)
+        u2 = self.up2(u3, d2)   # shape: (Batch, features*2, H/2, W/2)
+        u1 = self.up1(u2, d1)   # shape: (Batch, features, H, W)
 
         out = self.final(u1)    
         return out
 
 ######################################
-# BrightNPYDataset 
+# Data preparation
 ######################################
 
 class BrightNPYDataset(Dataset):
+    """
+    Data preparation
+    1. Load .npy files from a folder
+    2. Mask a circle from the center of the image
+    3. Normalize the image
+    4. Return the cropped image and the original image
+    """
     def __init__(
         self, 
         folder_path, 
@@ -264,7 +233,7 @@ class RMSELoss(nn.Module):
         return rmse_val
     
 ######################################
-# Train
+# Train via Back prop.
 ######################################
 
 def train_model(
@@ -274,22 +243,22 @@ def train_model(
     criterion,
     device,
     val_loader=None,
-    early_stop_patience=50,
+    early_stop_patience=20,
     improvement_threshold=0.01,
-    max_iterations=50
+    max_iterations=10000
 ):
     """  
     Args:
-        model: DNN model.
-        dataloader: Training DataLoader.
-        optimizer: Optimizer(ADAMW in our case).
-        criterion: Loss function(RMSE in our case).
+        model: DNN.
+        dataloader: Tensor dataset.
+        optimizer: Optimizer.
+        criterion: Loss function.
         device: torch.device.
-        val_loader: Validation DataLoader (optional).
+        val_loader: Validation Dataset (optional).
         early_stop_patience: Number of consecutive checks with no sufficient improvement to trigger early stopping.
         improvement_threshold: Required relative improvement in validation loss.
         max_iterations: Safety limit for training iterations.
-  
+    
     Returns:
         train_losses, val_losses: Lists of losses recorded during training.
     """
@@ -366,25 +335,11 @@ def evaluate_model(model, dataloader, criterion, device):
     return avg_loss
 
 ######################################
-# Visualization (to check things are on the right track)
+# Visualization
 ######################################
 
-def compute_psd2d(image_2d):
-    F = np.fft.fft2(image_2d)
-    F_shifted = np.fft.fftshift(F)
-    return np.abs(F_shifted)**2
-
-def bin_1d(data, bin_size=5):
-    length = len(data)
-    nbins = length // bin_size
-    truncated_length = nbins * bin_size
-    data_truncated = data[:truncated_length].reshape(nbins, bin_size)
-    return data_truncated.mean(axis=1)
-
 def visualize_prediction(model, dataloader, device, 
-                         save_path="prediction.png", 
-                         psd_save_path="psd_comparison.png",
-                         line_cut_save_path="horizontal_cut.png"):
+                         save_path="prediction.png"):
     model.eval()
     partial_batch, full_batch = next(iter(dataloader))
     partial_batch, full_batch = partial_batch.to(device), full_batch.to(device)
@@ -397,7 +352,7 @@ def visualize_prediction(model, dataloader, device,
     pred_img = predicted_batch[0, 0].cpu().numpy()
     diff_img = np.abs(full_img - pred_img)
 
-    # (1) Partial, Ground Truth, Predicted, Difference
+    # Partially masked, Ground Truth, Predicted, Difference
     fig, axes = plt.subplots(1, 4, figsize=(16, 5))
     axes[0].imshow(partial_img, cmap='gray', vmin=0, vmax=1)
     axes[0].set_title("Partial Input")
@@ -418,72 +373,42 @@ def visualize_prediction(model, dataloader, device,
     plt.savefig(save_path, dpi=300)
     plt.show()
 
-    # (2) PSD
-    full_psd = compute_psd2d(full_img)
-    pred_psd = compute_psd2d(pred_img)
-    full_psd_log = np.log10(full_psd + 1e-12)
-    pred_psd_log = np.log10(pred_psd + 1e-12)
-    diff_psd_log = full_psd_log - pred_psd_log
+######################################
+# Load train configuration (from JSON)
+######################################
 
-    vmin = min(full_psd_log.min(), pred_psd_log.min())
-    vmax = max(full_psd_log.max(), pred_psd_log.max())
+def load_config(config_path):
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    return config
 
-    fig_psd, ax_psd = plt.subplots(1, 3, figsize=(15, 6))
-    im0 = ax_psd[0].imshow(full_psd_log, cmap='viridis', vmin=vmin, vmax=vmax)
-    ax_psd[0].axis('off')
-    ax_psd[0].set_title("2D PSD: GT")
-    cbar0 = fig_psd.colorbar(im0, ax=ax_psd[0])
-    cbar0.set_label("log10(PSD)")
+def save_configuration_txt(config, config_file="configuration.txt"):
+    """
+    Save config dict as .txt
+    
+    Args:
+        config: Dictionary containing configuration parameters.
+        config_file: Name of the file to save the configuration.
+    """
+    # Get script name
+    script_name = os.path.basename(__file__) if "__file__" in globals() else "UNKNOWN_SCRIPT"
 
-    im1 = ax_psd[1].imshow(pred_psd_log, cmap='viridis', vmin=vmin, vmax=vmax)
-    ax_psd[1].axis('off')
-    ax_psd[1].set_title("2D PSD: Pred")
-    cbar1 = fig_psd.colorbar(im1, ax=ax_psd[1])
-    cbar1.set_label("log10(PSD)")
+    # Ensure save path exists
+    os.makedirs(config["SAVE_PATH"], exist_ok=True)
+    config_filename = os.path.join(config["SAVE_PATH"], config_file)
 
-    im2 = ax_psd[2].imshow(diff_psd_log, cmap='viridis', vmin=-vmax/3, vmax=vmax/3)
-    ax_psd[2].axis('off')
-    ax_psd[2].set_title("2D PSD: log10 diff")
-    cbar2 = fig_psd.colorbar(im2, ax=ax_psd[2])
-    cbar2.set_label("log10(PSD)")
-
-    plt.tight_layout()
-    plt.savefig(psd_save_path, dpi=300)
-    plt.show()
-
-    # (3) Horizontal line cuts
-    center_row = full_psd_log.shape[0] // 2 + 1
-    line_cut_gt = full_psd_log[center_row, :]
-    line_cut_pred = pred_psd_log[center_row, :]
-    line_cut_diff = diff_psd_log[center_row, :]
-
-    bin_size = 5
-    line_cut_gt_binned   = bin_1d(line_cut_gt,   bin_size=bin_size)
-    line_cut_pred_binned = bin_1d(line_cut_pred, bin_size=bin_size)
-    line_cut_diff_binned = bin_1d(line_cut_diff, bin_size=bin_size)
-
-    x_axis = np.arange(len(line_cut_gt))
-    x_axis_binned = np.arange(len(line_cut_gt_binned)) * bin_size + (bin_size / 2)
-
-    fig_cut, ax_cut = plt.subplots(1, 3, figsize=(18, 5))
-    ax_cut[0].plot(x_axis, line_cut_gt, label="GT PSD (raw)")
-    ax_cut[0].plot(x_axis_binned, line_cut_gt_binned, 'o-', label=f"GT PSD binned({bin_size})")
-    ax_cut[0].set_title("Horiz. Cut (GT PSD)")
-    ax_cut[0].legend()
-
-    ax_cut[1].plot(x_axis, line_cut_pred, color='orange', label="Pred PSD (raw)")
-    ax_cut[1].plot(x_axis_binned, line_cut_pred_binned, 'o-', color='red', label=f"Pred binned({bin_size})")
-    ax_cut[1].set_title("Horiz. Cut (Pred PSD)")
-    ax_cut[1].legend()
-
-    ax_cut[2].plot(x_axis, line_cut_diff, label="log10 diff (raw)")
-    ax_cut[2].plot(x_axis_binned, line_cut_diff_binned, 'o-', label=f"log10 diff binned({bin_size})")
-    ax_cut[2].set_title("Horiz. Cut (diff)")
-    ax_cut[2].legend()
-
-    plt.tight_layout()
-    plt.savefig(line_cut_save_path, dpi=300)
-    plt.show()
+    # json file to txt
+    with open(config_filename, "w") as f:
+        f.write(f"Script name: {script_name}\n\n")
+        f.write("=== Configuration ===\n\n")
+        for key, value in config.items():
+            if isinstance(value, (list, dict)):
+                value_str = json.dumps(value, indent=4)
+            else:
+                value_str = str(value)
+            f.write(f"{key} = {value_str}\n")
+    
+    print(f"Configuration saved to {config_filename}")
 
 ######################################
 # Main
@@ -499,9 +424,10 @@ if __name__ == "__main__":
     config = load_config(args.config)
 
     # Update config
-    PRETRAIN_ENABLED = config["PRETRAIN_ENABLED"]
-    REPLAY_ENABLED = config["REPLAY_ENABLED"]
-    TRANSFER_LEARNING_ENABLED = config["TRANSFER_LEARNING_ENABLED"]
+
+    ENABLE_PRETRAIN = config["ENABLE_PRETRAIN"]
+    ENABLE_REPLAY = config["ENABLE_REPLAY"]
+    ENABLE_TRANSFER = config["ENABLE_TRANSFER"]
     VAL_RATIO = config["VAL_RATIO"]
     REPLAY_RATIO = config["REPLAY_RATIO"]
     SAVE_PATH = config["SAVE_PATH"]
@@ -521,7 +447,7 @@ if __name__ == "__main__":
     RADIUS = config["RADIUS"]
     PRETRAIN_FOLDER_PATHS = config["PRETRAIN_FOLDER_PATHS"]
     EVAL_FOLDER_PATHS = config["EVAL_FOLDER_PATHS"]
-    NEW_FOLDER_PATHS = config["NEW_FOLDER_PATHS"]
+    TRANSFER_FOLDER_PATHS = config["TRANSFER_FOLDER_PATHS"]
 
     # Create save directory and save config
 
@@ -530,7 +456,7 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     # ---------------------------
-    # 1) Prepare PRETRAIN data
+    # 1) Prepare PRETRAIN data (train + validation)
     # ---------------------------
 
     print("=== Preparing PRETRAIN data from multiple folders ===")
@@ -551,8 +477,13 @@ if __name__ == "__main__":
     total_size = len(combined_pretrain_dataset)
     val_size = int(total_size * VAL_RATIO)
     train_size = total_size - val_size
-       
-    train_pretrain_dataset, val_pretrain_dataset = random_split(combined_pretrain_dataset, [train_size, val_size])
+    
+    # Create a generator with a fixed seed
+    rand_gen = torch.Generator()
+    rand_gen.manual_seed(42)
+    
+    # Prepare data in trainable format
+    train_pretrain_dataset, val_pretrain_dataset = random_split(combined_pretrain_dataset, [train_size, val_size], generator=rand_gen)
     combined_pretrain_loader = DataLoader(combined_pretrain_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=1)
     pretrain_loader = DataLoader(train_pretrain_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=1)
     val_pretrain_loader = DataLoader(val_pretrain_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=1)
@@ -560,6 +491,7 @@ if __name__ == "__main__":
     # ---------------------------
     # 2) Initialize model and optimizer
     # ---------------------------
+
     model = UNet(in_ch=1, out_ch=1, features=FEATURES, num_groups=NUM_GROUPS).to(device)
     num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Number of trainable parameters: {num_params}")
@@ -569,7 +501,8 @@ if __name__ == "__main__":
     # ---------------------------
     # 3) Train on PRETRAIN data
     # ---------------------------
-    if PRETRAIN_ENABLED:
+
+    if ENABLE_PRETRAIN:
 
         training_start_time = time.time()
 
@@ -582,93 +515,92 @@ if __name__ == "__main__":
             device=device,
             val_loader=val_pretrain_loader,
             early_stop_patience=PATIENCE,
-            improvement_threshold=IMPROVEMENT_THRESHOLD,
+            improvement_threshold=IMPROVEMENT_THRESHOLD
         )
         
-        # Record overall training end time and report total training duration
+        # Record overall training end time and print out total training duration
         training_end_time = time.time()
         total_training_time = training_end_time - training_start_time
         print(f"Total training time: {total_training_time:.2f} seconds")
 
-        # Save the total training time to a text file
-        time_file = os.path.join(SAVE_PATH, "total_pretrain_training_time.txt")
+        # Save total training time
+        time_file = os.path.join(SAVE_PATH, "total_prev_training_time.txt")
         with open(time_file, "w") as f:
             f.write(f"Total training time: {total_training_time:.2f} seconds\n")
 
         # Save epoch vs loss
-        with open(os.path.join(SAVE_PATH, "epoch_vs_loss_old.csv"), "w", newline="") as f:
+        with open(os.path.join(SAVE_PATH, "epoch_vs_loss_pretrain.csv"), "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["epoch", "train_loss"])
             for ep, loss_val in enumerate(train_losses_pretrain, start=1):
                 writer.writerow([ep, loss_val])
-        with open(os.path.join(SAVE_PATH, "epoch_vs_val_loss_old.csv"), "w", newline="") as f:
+        with open(os.path.join(SAVE_PATH, "epoch_vs_val_loss_pretrain.csv"), "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["epoch", "val_loss"])
             for ep, loss_val in enumerate(val_losses_pretrain, start=1):
                 writer.writerow([ep, loss_val])
 
         # Save evaluation
-        old_loss = evaluate_model(model, combined_pretrain_loader, criterion, device)
-        print(f"Evaluation on OLD data: RMSE: {old_loss:.6f}")
-        with open(os.path.join(SAVE_PATH, f"old_loss.csv"), "w", newline="") as f:
+        pretrain_loss = evaluate_model(model, combined_pretrain_loader, criterion, device)
+        print(f"Evaluation on PRETRAIN data: RMSE: {pretrain_loss:.6f}")
+        with open(os.path.join(SAVE_PATH, f"pretrain_loss.csv"), "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["Old_Data_RMSE_After_Training"])
-            writer.writerow([old_loss])
+            writer.writerow(["PRETRAIN_Data_RMSE_After_Training"])
+            writer.writerow([pretrain_loss])
 
         # Save model
-        model_save_path_pretrain = os.path.join(SAVE_PATH, SAVE_WEIGHTS)
-        torch.save(model.state_dict(), model_save_path_pretrain)
-        print(f"Pretrain model weights saved to {model_save_path_pretrain}")
+        pretrain_model_save_path = os.path.join(SAVE_PATH, SAVE_WEIGHTS)
+        torch.save(model.state_dict(), pretrain_model_save_path)
+        print(f"Pretrained model weights saved to {pretrain_model_save_path}")
 
     else:
-        model_load_path_pretrain = LOAD_WEIGHTS
+        pretrain_model_load_path = LOAD_WEIGHTS
         print("=== Skipping pretraining. Loading saved weights ===")
-        if not os.path.isfile(model_load_path_pretrain):
+        if not os.path.isfile(pretrain_model_load_path):
             raise FileNotFoundError(
-                f"Cannot find '{model_load_path_pretrain}'. Set TRAIN_PRETRAIN_DATA = True first to create it, or fix the path."
+                f"Cannot find '{pretrain_model_load_path}'. Set ENABLE_PRETRAIN = True first to create it, or fix the path."
             )
-        model.load_state_dict(torch.load(model_load_path_pretrain, map_location=device))
+        model.load_state_dict(torch.load(pretrain_model_load_path, map_location=device))
     
     # ---------------------------
-    # 4) Train on NEW data
+    # 4) TRANSFER Learning
     # ---------------------------
 
-    if TRANSFER_LEARNING_ENABLED:
+    if ENABLE_TRANSFER:
 
         print("TRANSFER learning is enabled")
                
-        # Smaller learning rate when replay
+        # Set learning rate for transfer learning
         optimizer = optim.AdamW(model.parameters(), lr=TRANSFER_LR, weight_decay=WEIGHT_DECAY)
         
         # ---------------------------
         # 5) Dynamic Replay Pool Setup:
-        # Initialize two dynamic pools:
-        #   old_pool_dynamic: starts as all folders in PREV_FOLDER_PATHS.
-        #   replay_pool_dynamic: initially empty.
+        # -- Initialize two dynamic pools:
+        #      prev_pool_dynamic: starts as all folders in PRETRAIN_FOLDER_PATHS.
+        #      replay_pool_dynamic: initially empty.
         # ---------------------------
-        pretrain_pool_dynamic = list(PRETRAIN_FOLDER_PATHS)
-        replay_pool_dynamic = []
+        prev_pool = list(PRETRAIN_FOLDER_PATHS)
+        replay_pool = []
         
         # ---------------------------
-        # 6) Process each folder in NEW_FOLDER_PATHS individually for transfer learning
+        # 6) Process each folder in TRANSFER_FOLDER_PATHS individually for transfer training
         # ---------------------------
 
-        for new_folder in NEW_FOLDER_PATHS:
+        for new_folder in TRANSFER_FOLDER_PATHS:
             training_start_time = time.time()
             print(f"=== Processing new data from folder: {new_folder} ===")
-            # Load new data from this folder
+            # Load new data from the current folder
             new_data = BrightNPYDataset(
                 folder_path=new_folder,
                 center_y=CENTER_Y,
                 center_x=CENTER_X,
                 radius=RADIUS
             )
-            if REPLAY_ENABLED:
-
-                print("Replay is ENABLED. Gathering pretrain & replay samples.")
-                # Sample REPLAY_RATIO from each folder in pretrain_pool_dynamic:
+            if ENABLE_REPLAY:
+                print("Replay is ENABLED. Gathering prev. & replay samples.")
+                # Sample REPLAY_RATIO from each folder in prev_pool_dynamic:
                 prev_samples = []
-                for folder in pretrain_pool_dynamic:
+                for folder in prev_pool:
                     ds = BrightNPYDataset(
                         folder_path=folder,
                         center_y=CENTER_Y,
@@ -686,7 +618,7 @@ if __name__ == "__main__":
                 
                 # Sample REPLAY_RATIO from each folder in replay_pool_dynamic:
                 replay_samples = []
-                for folder in replay_pool_dynamic:
+                for folder in replay_pool:
                     ds = BrightNPYDataset(
                         folder_path=folder,
                         center_y=CENTER_Y,
@@ -702,7 +634,7 @@ if __name__ == "__main__":
                         ds_subset = Subset(ds, chosen_indices)
                         replay_samples.append(ds_subset)
 
-                # Combine new data with samples from pretrain and replay pools:
+                # Combine fresh data with samples from prev. and replay pools:
                 datasets_to_concat = [new_data]
                 if prev_samples:
                     datasets_to_concat.append(ConcatDataset(prev_samples))
@@ -713,18 +645,23 @@ if __name__ == "__main__":
                 print("Replay is DISABLED. Training only on new data.")
                 replay_dataset = new_data
 
-            print(f"Final combined replay dataset size: {len(replay_dataset)}")
-
-            # Split replay dataset into training and validation portions
+            print(f"Final combined dataset size: {len(replay_dataset)}")
+            
+            # Split replay dataset into training and validation sets
             total_size_new = len(replay_dataset)
             val_size_new = int(total_size_new * VAL_RATIO)
             train_size_new = total_size_new - val_size_new
 
-            train_replay_dataset, val_replay_dataset = random_split(replay_dataset, [train_size_new, val_size_new])
+            # Create a generator with a fixed seed
+            rand_gen = torch.Generator()
+            rand_gen.manual_seed(42)
+
+            # Prepare data in trainable format
+            train_replay_dataset, val_replay_dataset = random_split(replay_dataset, [train_size_new, val_size_new], rand_gen)
             replay_train_loader = DataLoader(train_replay_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=1)
             replay_val_loader = DataLoader(val_replay_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=1)
 
-            # Train on replay dataset (new data from this folder + replay samples)
+            # Train on replay dataset
             print("=== Training on new data + replay for current folder ===")
             train_losses_new, val_losses_new = train_model(
                 model=model,
@@ -734,23 +671,23 @@ if __name__ == "__main__":
                 device=device,
                 val_loader=replay_val_loader,
                 early_stop_patience=PATIENCE,
-                improvement_threshold=IMPROVEMENT_THRESHOLD,
+                improvement_threshold=IMPROVEMENT_THRESHOLD
             )
 
-            # Use a folder tag; here we use the base name of the replay folder.
+            # Using a folder tag to individually save the training time and losses
             folder_tag = os.path.basename(os.path.dirname(os.path.dirname(os.path.normpath(new_folder))))
             
-            # Record overall training end time and report total training duration       
+            # Record overall training end time and print out total training duration   
             training_end_time = time.time()
             total_training_time = training_end_time - training_start_time
             print(f"Total training time: {total_training_time:.2f} seconds")
 
-            # Save the total training time to a text file
+            # Save total training time
             time_file = os.path.join(SAVE_PATH, f"{folder_tag}_training_time.txt")
             with open(time_file, "w") as f:
                 f.write(f"Total training time: {total_training_time:.2f} seconds\n")
 
-            # Save train/validation losses for this folder
+            # Save epoch vs loss
             with open(os.path.join(SAVE_PATH, f"epoch_vs_loss_new_data_{folder_tag}.csv"), "w", newline="") as f:
                 writer = csv.writer(f)
                 writer.writerow(["epoch", "train_loss"])
@@ -761,14 +698,14 @@ if __name__ == "__main__":
                 writer.writerow(["epoch", "val_loss"])
                 for ep, loss_val in enumerate(val_losses_new, start=1):
                     writer.writerow([ep, loss_val])
-            
-            # Save the model weights for this replay training iteration
+                    
+            # Save model
             model_save_path = os.path.join(SAVE_PATH, f"model_weights_replay_{folder_tag}.pth")
             torch.save(model.state_dict(), model_save_path)
             print(f"Final model weights saved to {model_save_path}")
 
             # ---------------------------
-            # 7) Evaluate on both EVALUATION FOLDER data and on the current new folder
+            # 7) Evaluate on both EVAL data and NEW data
             # ---------------------------
             eval_datasets = []
         
@@ -794,46 +731,57 @@ if __name__ == "__main__":
                 writer.writerow([eval_loss])
 
             new_loss = evaluate_model(model, DataLoader(new_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=1), criterion, device)
-            print(f"Evaluation on new folder {folder_tag}: RMSE: {new_loss:.6f}")
+            print(f"Evaluation on NEW folder {folder_tag}: RMSE: {new_loss:.6f}")
             with open(os.path.join(SAVE_PATH, f"new_data_loss_after_replay_{folder_tag}.csv"), "w", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow(["New_Data_RMSE_After_Training"])
+                writer.writerow(["NEW_Data_RMSE_After_Training"])
                 writer.writerow([new_loss])
-
             # ---------------------------
             # 8) Update dynamic pools:
-            #    - Append the current replay folder to replay_pool_dynamic.
-            #    - Remove the oldest folder from old_pool_dynamic (if available).
+            #    - Append the current replay folder to replay_pool.
+            #    - Remove the oldest folder from prev_pool (if available).
             # ---------------------------
-            if REPLAY_ENABLED:
+            if ENABLE_REPLAY:
                 parts = new_folder.strip('/').split('/')
                 date_str = parts[1].replace('_full','')
                 replay_folder = f"../{date_str}/npy_{date_str}/bright_npy/"  
-                replay_pool_dynamic.append(replay_folder)
+                replay_pool.append(replay_folder)
                 print(f"Updating replay pool. Adding {replay_folder}")
-                if len(pretrain_pool_dynamic) > 0:
-                    removed = pretrain_pool_dynamic.pop(0)
-                    print(f"Removed oldest old folder from dynamic pool: {removed}")
+                if len(prev_pool) > 0:
+                    removed = prev_pool.pop(0)
+                    print(f"Removed oldest folder from dynamic pool: {removed}")
             else: print("Replay is disabled, not updating replay pools.")
-
     else: print("TRANSFER learning is disabled")
 
     # ---------------------------
     # 9) Visualization
     # ---------------------------
 
-    # Visualize using the old data
-    pretrain_data = BrightNPYDataset(
-        folder_path=PRETRAIN_FOLDER_PATHS[0],
-        center_y=CENTER_Y,
-        center_x=CENTER_X,
-        radius=RADIUS
-    )
-    visualize_prediction(
-        model=model,
-        dataloader=DataLoader(pretrain_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=1),
-        device=device,
-        save_path=os.path.join(SAVE_PATH, "prediction.png"),
-        psd_save_path=os.path.join(SAVE_PATH, "psd_comparison.png"),
-        line_cut_save_path=os.path.join(SAVE_PATH, "horizontal_cut.png")
-    )
+    if ENABLE_TRANSFER:
+        # Visualize using the NEW data from the last processed replay folder.
+        new_data_last = BrightNPYDataset(
+            folder_path=TRANSFER_FOLDER_PATHS[-1],
+            center_y=CENTER_Y,
+            center_x=CENTER_X,
+            radius=RADIUS
+        )
+        visualize_prediction(
+            model=model,
+            dataloader=DataLoader(new_data_last, batch_size=BATCH_SIZE, shuffle=True, num_workers=1),
+            device=device,
+            save_path=os.path.join(SAVE_PATH, "prediction.png")
+        )
+    else:
+        # Visualize using the PRETRAIN data
+        old_data = BrightNPYDataset(
+            folder_path=PRETRAIN_FOLDER_PATHS[0],
+            center_y=CENTER_Y,
+            center_x=CENTER_X,
+            radius=RADIUS
+        )
+        visualize_prediction(
+            model=model,
+            dataloader=DataLoader(old_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=1),
+            device=device,
+            save_path=os.path.join(SAVE_PATH, "prediction.png")
+        )
