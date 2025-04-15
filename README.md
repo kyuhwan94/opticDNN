@@ -5,7 +5,7 @@ We provide the python script used for training the network.
 
 ## Items
 1. ./configs: Contains an example configuration that can used for training.
-&nbsp;  * The example configuration is set in pretraining mode. 
+&nbsp;*The example configuration is set in pretraining mode. 
 3. ./src: Contains source code for training
 
 ## Pipeline
