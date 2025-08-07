@@ -60,7 +60,7 @@ optDNN/
 chmod +x ./src/run.sh
 
 # Run training using default config
-./src/run.sh'''
+./src/run.sh
 
 ---
 
@@ -72,3 +72,5 @@ Copy
 Edit
 python ./src/predict.py --config ./configs/example.yaml
 Output will be saved in ./results_predict/.
+
+---
