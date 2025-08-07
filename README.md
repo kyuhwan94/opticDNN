@@ -49,7 +49,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ## 🧪 Quickstart
 
-First, fill in the different paths to load and save files in the configuration .json file.
+First, fill in the different paths to load and save files in default.json. Then,
 
 ```bash
 # Give permission to run the training shell script
