@@ -1,7 +1,6 @@
 # optDNN
-This registry contains a python script for reconstructing atomic absorption images with reduced imaging fringe noise.
 
-The idea is based on using deep learning to infer the proper imaging beam profile at the place of the atoms.
+**optDNN** is a deep learning-based tool for reconstructing atomic absorption images with reduced fringe noise, by inferring the proper imaging beam profile at the position of the atoms.
 
 This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
 
