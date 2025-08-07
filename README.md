@@ -62,15 +62,3 @@ chmod +x ./src/run.sh
 # Run training using default config
 ./src/run.sh
 
----
-
-## 🔍 Prediction
-To test on a single absorption image or dataset using a trained model:
-
-bash
-Copy
-Edit
-python ./src/predict.py --config ./configs/example.yaml
-Output will be saved in ./results_predict/.
-
----
