@@ -73,5 +73,5 @@ To apply the trained model to new atomic absorption images:
 python ./src/predict.py --config ./configs/example.yaml
 ```
 
-**Prediction results will be saved in the ./results_predict/ directory.
-**Make sure LOAD_WEIGHTS is set correctly in the config file to point to a trained model.
+-Prediction results will be saved in the ./results_predict/ directory.
+-Make sure LOAD_WEIGHTS is set correctly in the config file to point to a trained model.
