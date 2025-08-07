@@ -26,7 +26,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
   - `predict.py`: Inference script
   - `run.sh`: Shell script to run training
 
-## ⚙️ Configuration Parameters (in `configs/example.yaml`)
+## ⚙️ Configuration Parameters (in `configs/default.json`)
 
 | Parameter           | Description |
 |---------------------|-------------|
@@ -65,7 +65,7 @@ chmod +x ./src/run.sh
 To apply the trained model to new atomic absorption images:
 
 ```bash
-python ./src/predict.py --config ./configs/example.yaml
+python ./src/predict.py --config ./configs/default.json
 ```
 
 - Prediction results will be saved in the ./results_predict/ directory.
