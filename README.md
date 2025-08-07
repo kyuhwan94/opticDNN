@@ -55,10 +55,10 @@ optDNN/
 
 ## 🧪 Quickstart
 
-bash
+```bash
 # Give permission to run the training shell script
 chmod +x ./src/run.sh
 
 # Run training using default config
 ./src/run.sh
-
+''
