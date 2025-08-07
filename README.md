@@ -19,6 +19,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 ## 📁 Repository Structure
 
 optDNN/
+
 ├── configs/           # Example YAML configs (pretraining/transfer modes)
 
 ├── results/           # Training outputs (inferred images, weights, logs)
