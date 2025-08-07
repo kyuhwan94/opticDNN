@@ -18,7 +18,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ## 📁 Repository Structure
 
-- **configs/**: Example YAML configs (pretraining/transfer modes)
+- **configs/**: Example .json configuration files (pretraining/transfer modes)
 - **results/**: Training outputs (inferred images, weights, logs)
 - **results_predict/**: Results from prediction
 - **src/**: Source code
