@@ -11,7 +11,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 - PyTorch-based training pipeline for image reconstruction.
 - Pretraining and transfer learning support.
 - Visualization of inferred reference (beam profile) images.
-- Fringe removal without experimental reference images.
+- Fringe removal without experimental reference images (single-shot absorption imaging is possible).
 - Configurable training and evaluation pipeline.
 
 ---
