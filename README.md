@@ -1,4 +1,4 @@
-# optDNN
+# opticDNN
 
 **optDNN** is a deep learning-based tool for reconstructing atomic absorption images (or phase contrast images) with reduced fringe noise, by inferring the proper imaging beam profile at the position of the atoms.
 
