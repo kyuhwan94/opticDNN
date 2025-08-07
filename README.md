@@ -49,6 +49,8 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ## 🧪 Quickstart
 
+First, fill in the different paths to load and save files in the configuration .json file.
+
 ```bash
 # Give permission to run the training shell script
 chmod +x ./src/run.sh
