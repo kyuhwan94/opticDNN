@@ -75,5 +75,6 @@ python ./src/predict.py --config ./configs/example.yaml
 
 ## 📌 Notes
 
-- Tested on Linux with Python ≥ 3.10.12 and PyTorch ≥ 2.5.1
-- GPU acceleration is highly recommended for training.
+- Tested on Linux with Python 3.10.12 and PyTorch 2.5.1
+- Tested with Nvidia RTX 4090.
+- GPU acceleration is highly recommended for training. 
