@@ -49,14 +49,11 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ## 🧪 Quickstart
 
-First, fill in the different paths to load and save files in default.json. 
-
-Then, write down the center position (`CENTER_X` and `CENTER_Y`) and radius (`RADIUS`) of interest (in pixel units).
-
-- Within the current model architecture, only radii with integer multiples of 64 are supported.
-
-Next,
-
+1. Fill in the different paths to load and save files in default.json. 
+2. Prepare training data (.npy file) in `PRETRAIN_FOLDER_PATHS`.
+3. Write down the center position (`CENTER_X` and `CENTER_Y`) and radius (`RADIUS`) of interest (in pixel units).
+  - Within the current model architecture, only radii with integer multiples of 64 are supported.
+Then,
 
 ```bash
 # Give permission to run the training shell script
