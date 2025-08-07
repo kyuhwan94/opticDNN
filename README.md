@@ -1,4 +1,4 @@
-# atomIMG
+# optDNN
 This registry contains a python script for reconstructing atomic absorption image signals with reduced imaging fringe noise.
 
 This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
