@@ -85,6 +85,7 @@ python ./src/predict.py --config ./configs/default.json
 
 - Tested on Linux with Python 3.10.12 and PyTorch 2.5.1
 - Tested with Nvidia RTX 4090.
-- GPU acceleration is highly recommended for training. 
+- GPU acceleration is highly recommended for training.
+- Supports .npy files for image data.
 - For the current model architecture, only images whose size is integer multiples of 128 $\times$ 128 can be used for training.
   - However, upon slight modification of the model architecture, the training can easily be extended to other image size.
