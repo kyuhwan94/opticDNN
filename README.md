@@ -1,5 +1,5 @@
 # atomIMG
-This registry contains a python script for training a deep neural network, which can be used to reconstruct atomic absorption signals.
+This registry contains a python script for reconstructing atomic absorption image signals with reduced imaging fringe noise.
 
 This repository is maintained by [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
 
