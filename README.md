@@ -53,6 +53,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 2. Prepare training data (.npy file) in `PRETRAIN_FOLDER_PATHS`.
 3. Write down the center position (`CENTER_X` and `CENTER_Y`) and radius (`RADIUS`) of interest (in pixel units).
   - Within the current model architecture, only radii with integer multiples of 64 are supported.
+
 Then,
 
 ```bash
