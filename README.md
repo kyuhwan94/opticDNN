@@ -2,7 +2,8 @@
 
 **optDNN** is a deep learning-based tool for reconstructing atomic absorption images with reduced fringe noise, by inferring the proper imaging beam profile at the position of the atoms.
 
-This project is part of a research at the [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
+This project is part of a research conducted at the [Quantum Gas Laboratory](https://qgl.snu.ac.kr/).
+
 ---
 
 ## 🚀 Features
