@@ -34,7 +34,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 | `VAL_RATIO`         | Fraction of validation data (0–1) |
 | `REPLAY_RATIO`      | Replay buffer size ratio (0–1) |
 | `SAVE_PATH`         | Path to save outputs |
-| `SAVE_WEIGHTS`      | File path to save model weights |
+| `SAVE_WEIGHTS`      | Path to save model weights |
 | `LOAD_WEIGHTS`      | Path to pretrained weights |
 | `PATIENCE`          | Early stopping patience |
 | `IMPROVEMENT_THRESHOLD` | Threshold to detect validation improvement |
