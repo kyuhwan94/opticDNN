@@ -60,7 +60,7 @@ optDNN/
 chmod +x ./src/run.sh
 
 # Run training using default config
-./src/run.sh
+./src/run.sh'''
 
 ---
 
