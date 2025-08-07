@@ -49,7 +49,14 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ## 🧪 Quickstart
 
-First, fill in the different paths to load and save files in default.json. Then,
+First, fill in the different paths to load and save files in default.json. 
+
+Then, write down the center position (`CENTER_X` and `CENTER_Y`) and radius (`RADIUS`) of interest (in pixel units).
+
+- Within the current model architecture, radii with integer multiples of 64 are only supported.
+
+Next,
+
 
 ```bash
 # Give permission to run the training shell script
