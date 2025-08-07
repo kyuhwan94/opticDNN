@@ -14,7 +14,6 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 - Fringe removal without experimental reference images.
   - Single-shot absorption imaging is possible.
 - Configurable training and evaluation pipeline.
-- Supports .npy files for image data.
 
 ---
 
@@ -85,6 +84,7 @@ python ./src/predict.py --config ./configs/default.json
 ## 📌 Notes
 
 - Tested on Linux with Python 3.10.12 and PyTorch 2.5.1
+- Supports .npy files for image data.
 - Tested with Nvidia RTX 4090.
 - GPU acceleration is highly recommended for training.
 - For the current model architecture, only images whose size is integer multiples of 128 $\times$ 128 can be used for training.
