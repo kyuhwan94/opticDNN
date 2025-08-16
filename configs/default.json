@@ -1,0 +1,35 @@
+{
+  "ENABLE_PRETRAIN": true,
+  "ENABLE_REPLAY": false,
+  "ENABLE_TRANSFER": false,
+  "VAL_RATIO": 0.2,
+  "REPLAY_RATIO": 0.2,
+  "SAVE_PATH": "../results/pretrain/",
+  "SAVE_WEIGHTS": "model_weights.pth",
+  "LOAD_WEIGHTS": "../results/pretrain/model_weights.pth",
+  "PATIENCE": 50,
+  "IMPROVEMENT_THRESHOLD": 0.002,
+  "FEATURES": 32,
+  "NUM_GROUPS": 16,
+  "BATCH_SIZE": 6,
+  "BATCH_MOMENTUM": 0.1,
+  "PRETRAIN_LR": 0.0001,
+  "TRANSFER_LR": 0.0001,
+  "WEIGHT_DECAY": 0.0001,
+  "CENTER_X": 600,
+  "CENTER_Y": 400,
+  "RADIUS": 384,
+  "PRETRAIN_FOLDER_PATHS": [
+    "../xx/xx/bright_npy",
+    "../xx/xx/bright_npy"
+  ],
+  "EVAL_FOLDER_PATHS": [
+    "../xx/xx/bright_npy",
+    "../xx/xx/bright_npy"
+  ],
+  "TRANSFER_FOLDER_PATHS": [
+    "../xx/xx/bright_npy",
+    "../xx/xx/bright_npy"
+  ]
+}
+  
