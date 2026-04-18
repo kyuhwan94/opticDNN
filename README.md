@@ -24,7 +24,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
   - `train.py`: Main training pipeline
   - `predict.py`: Inference script
   - `run.sh`: Shell script to run training
-- **data_summary.cs**: Contains data for figures in Dual-species atomic absorption image reconstruction using deep neural networks (arXiv:2508.12120)
+- **data_summary.csv**: Contains data for figures in Dual-species atomic absorption image reconstruction using deep neural networks (arXiv:2508.12120)
 
 ## Configuration Parameters (in `configs/default.json`)
 
