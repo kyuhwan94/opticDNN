@@ -6,7 +6,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ---
 
-## 🚀 Features
+## Features
 
 - PyTorch-based training pipeline for image reconstruction.
 - Supports pretraining and transfer learning.
@@ -17,7 +17,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 - **configs/**: Example .json configuration files (pretraining/transfer modes)
 - **src/**: Source code
@@ -25,7 +25,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
   - `predict.py`: Inference script
   - `run.sh`: Shell script to run training
 
-## ⚙️ Configuration Parameters (in `configs/default.json`)
+## Configuration Parameters (in `configs/default.json`)
 
 | Parameter           | Description |
 |---------------------|-------------|
@@ -47,7 +47,7 @@ This project is part of a research conducted at the [Quantum Gas Laboratory](htt
 
 ---
 
-## 🧪 Quickstart
+## Quickstart
 
 1. Fill in the different paths to load and save files in default.json. 
 2. Prepare training data (.npy file) in `PRETRAIN_FOLDER_PATHS`.
@@ -66,7 +66,7 @@ chmod +x ./src/run.sh
 
 ---
 
-## 🔍 Prediction
+## Prediction
 
 To apply the trained model to new atomic absorption images:
 
@@ -79,7 +79,7 @@ python ./src/predict.py --config ./configs/default.json
 
 ---
 
-## 📌 Notes
+## Notes
 
 - Tested on Linux with Python 3.10.12 and PyTorch 2.5.1
 - Supports .npy files for image data.
